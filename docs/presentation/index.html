@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Techday 2016</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/league.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+		<style type="text/css">
+    		li { text-align: left; }
+		</style>
+
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section><h1>Jyväskylä Techday 2016</h1></section>
+				<section><h2>Täh?</h2>
+				
+				Ideana on rakentaa jotain konkreettista, näyttää mitä me osataan, ja samalla oppia uutta.
+				</section>
+				<section>
+					<h2>Tavoite</h2>
+
+					Etäohjattava legorobotti antureilla ja kameralla.
+				</section>
+				<section>
+					<h2>Minimum viable product</h2>
+
+					<li>Robotti liikkuu APIa käskyttämällä</li>
+					<li>Robottiin kytketty kamera lähettää kuvaa ohjaajalle</li>
+					<li>Anturidata luetaan ja lähetetään ohjaajalle</li>
+				</section>
+				<section>
+					<h2>Team 1</h2>
+					<li><a href="http://www.ev3dev.org/">ev3dev</a>in asennus Mindstormsiin</li>
+					<li>Raspberry pi linkitettynä Legoihin</li>
+					<li>API rullaa Raspissa, kytkennät mahdollisimman moneen Mindstormsin ominaisuuteen (liike, sensorit)</li>
+				</section>
+				<section>
+					<h2>Team 2</h2>
+					<li>Raspicam kiinni Raspberryyn, livekuva näkyviin samalla koneella pyörivään webbiserveriin</li>
+					<li>Hahmontunnistus kameralla OpenCV:llä ja API kertomaan missä suunnassa ko. esine on.</l1>
+				</section>
+				<section>
+					<h2>Team 3</h2>
+					<li>AstroPI kytkettynä Raspiin, kaiken sensoridatan lähetys edelleen <a href="http://mqtt.org/">MQTT</a>:llä</h2>
+				</section>
+				<section>
+					<h2>Visio</h2>
+					<li>Ohjaus tabletilla, käyttöliittymässä nuolet eteen/taakse molemmilla käsillä kummallekin telalle</li>
+					<li>Keskellä livekuva tabletista</li>
+					<li>Sopivassa Paikassa(tm) kaikki saatavilla oleva sensoridata</li>
+				</section>
+				<section>
+					<h2>Aikataulu</h2>
+					Aloitellaan lounasaikaan sovittuna päivänä
+					Ohjelmaa jatkuu niin pitkään kun jaksetaan.
+					Firman puolesta ruokaa ja juomaa.
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
