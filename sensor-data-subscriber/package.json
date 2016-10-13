@@ -1,0 +1,11 @@
+{
+  "author": "Riku Lindblad",
+  "name": "mqtt-server",
+  "description": "Display MQTT values",
+  "version": "0.1.0",
+  "dependencies": {
+    "express": "^4.14.0",
+    "mqtt": "^2.0.1",
+    "socket.io": "^1.5.0"
+  }
+}
