@@ -1,5 +1,5 @@
 #!/usr/bin/env python2.7
-#from ev3dev import ev3
+from ev3dev import ev3
 from flask import Flask
 from flask import request
 import time
@@ -21,7 +21,10 @@ def hello():
     - /backward_right
     - /stop
   Decides the direction to run based on direction from origo to x,y location, runs 2 seconds towards that direction
-    - /drive?x=[x]&y=[y]"""
+    - /drive?x=[x]&y=[y]
+  Open and close the Claw
+    - /grab
+    - /release"""
 
     return message
 
@@ -29,8 +32,8 @@ def hello():
 def forward():
     global rightMotor
     global leftMotor
-#    rightMotor=ev3.LargeMotor('outC')
-#    leftMotor=ev3.LargeMotor('outB')
+    rightMotor=ev3.LargeMotor('outC')
+    leftMotor=ev3.LargeMotor('outB')
     rightMotor.duty_cycle_sp=50
     rightMotor.run_direct()
     leftMotor.duty_cycle_sp=50
@@ -41,8 +44,8 @@ def forward():
 def backward():
     global rightMotor
     global leftMotor
-#    rightMotor=ev3.LargeMotor('outC')
-#    leftMotor=ev3.LargeMotor('outB')
+    rightMotor=ev3.LargeMotor('outC')
+    leftMotor=ev3.LargeMotor('outB')
     rightMotor.duty_cycle_sp=-50
     rightMotor.run_direct()
     leftMotor.duty_cycle_sp=-50
@@ -53,8 +56,8 @@ def backward():
 def stop():
     global rightMotor
     global leftMotor
-#    rightMotor=ev3.LargeMotor('outC')
-#    leftMotor=ev3.LargeMotor('outB')
+    rightMotor=ev3.LargeMotor('outC')
+    leftMotor=ev3.LargeMotor('outB')
     rightMotor.stop()
     leftMotor.stop()
     return "..stopping"
@@ -63,8 +66,8 @@ def stop():
 def left():
     global rightMotor
     global leftMotor
-#    rightMotor=ev3.LargeMotor('outC')
-#    leftMotor=ev3.LargeMotor('outB')
+    rightMotor=ev3.LargeMotor('outC')
+    leftMotor=ev3.LargeMotor('outB')
     rightMotor.duty_cycle_sp=50
     rightMotor.run_direct()
     leftMotor.duty_cycle_sp=-50
@@ -75,8 +78,8 @@ def left():
 def right():
     global rightMotor
     global leftMotor
-#    rightMotor=ev3.LargeMotor('outC')
-#    leftMotor=ev3.LargeMotor('outB')
+    rightMotor=ev3.LargeMotor('outC')
+    leftMotor=ev3.LargeMotor('outB')
     rightMotor.duty_cycle_sp=-50
     rightMotor.run_direct()
     leftMotor.duty_cycle_sp=50
@@ -87,8 +90,8 @@ def right():
 def forward_right():
     global rightMotor
     global leftMotor
-#    rightMotor=ev3.LargeMotor('outC')
-#    leftMotor=ev3.LargeMotor('outB')
+    rightMotor=ev3.LargeMotor('outC')
+    leftMotor=ev3.LargeMotor('outB')
     rightMotor.duty_cycle_sp=50
     rightMotor.run_direct()
     leftMotor.duty_cycle_sp=100
@@ -99,8 +102,8 @@ def forward_right():
 def forward_left():
     global rightMotor
     global leftMotor
-#    rightMotor=ev3.LargeMotor('outC')
-#    leftMotor=ev3.LargeMotor('outB')
+    rightMotor=ev3.LargeMotor('outC')
+    leftMotor=ev3.LargeMotor('outB')
     rightMotor.duty_cycle_sp=100
     rightMotor.run_direct()
     leftMotor.duty_cycle_sp=50
@@ -111,8 +114,8 @@ def forward_left():
 def backward_right():
     global rightMotor
     global leftMotor
-#    rightMotor=ev3.LargeMotor('outC')
-#    leftMotor=ev3.LargeMotor('outB')
+    rightMotor=ev3.LargeMotor('outC')
+    leftMotor=ev3.LargeMotor('outB')
     rightMotor.duty_cycle_sp=-50
     rightMotor.run_direct()
     leftMotor.duty_cycle_sp=-100
@@ -123,8 +126,8 @@ def backward_right():
 def backward_left():
     global rightMotor
     global leftMotor
-#    rightMotor=ev3.LargeMotor('outC')
-#    leftMotor=ev3.LargeMotor('outB')
+    rightMotor=ev3.LargeMotor('outC')
+    leftMotor=ev3.LargeMotor('outB')
     rightMotor.duty_cycle_sp=-100
     rightMotor.run_direct()
     leftMotor.duty_cycle_sp=-50
@@ -167,7 +170,7 @@ def drive():
 @app.route("/grab")
 def grab():
     global grabMotor
-#    grabMotor=ev3.Motor('outA')
+    grabMotor=ev3.Motor('outA')
     grabMotor.position=0
     grabMotor.duty_cycle_sp=50
     grabMotor.run_direct()
@@ -178,7 +181,7 @@ def grab():
 @app.route("/release")
 def release():
     global grabMotor
-#    grabMotor=ev3.Motor('outA')
+    grabMotor=ev3.Motor('outA')
     grabMotor.duty_cycle_sp=-50
     grabMotor.run_direct()
     time.sleep(2)
