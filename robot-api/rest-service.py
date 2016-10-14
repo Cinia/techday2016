@@ -9,7 +9,24 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "Hello world"
+    message = """Hello, this is the command-api for robot. Available commands (endpoints) are:
+  With these robot just runs to given direction until stop command is given
+    - /forward
+    - /backward
+    - /left
+    - /right
+    - /forward_left
+    - /forward_right
+    - /backward_left
+    - /backward_right
+    - /stop
+  Decides the direction to run based on direction from origo to x,y location, runs 2 seconds towards that direction
+    - /drive?x=[x]&y=[y]
+  Open and close the Claw
+    - /grab
+    - /release"""
+
+    return message
 
 @app.route("/forward")
 def forward():
