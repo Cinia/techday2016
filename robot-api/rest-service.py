@@ -1,5 +1,7 @@
 #!/usr/bin/env python2.7
 from ev3dev import ev3
+from Queue import Queue, Empty
+
 from flask import Flask
 from flask import request
 from flask import Response
@@ -8,6 +10,77 @@ import math
 import threading
 
 app = Flask(__name__)
+
+
+class FakeMotor(object):
+    """
+    Class for testing the motor commands without ev3dev environment
+    """
+    def __init__(self, motor_name):
+        self.duty_cycle_sp = 0
+        self.motor_name = motor_name
+
+    def run_direct(self):
+        print "Motor " + self.motor_name + " running at speed of " + str(self.duty_cycle_sp)
+
+    def stop(self):
+        print "Motor " + self.motor_name + " stopped"
+
+
+def get_large_motor(motor_address):
+    return ev3.LargeMotor(motor_address)
+    #return FakeMotor(motor_address)
+
+
+right_motor = get_large_motor('outC')
+left_motor = get_large_motor('outB')
+grab_motor = get_large_motor('outA')
+
+robot_command_queue = Queue()
+
+
+def the_thread():
+    ticks_left = 0
+    motors_running = False
+
+    print "Thread: the thread is starting"
+    while True:
+        # print "the thread is going to sleep"
+        time.sleep(0.5)
+        # print "the thread has awoken"
+        try:
+            if motors_running:
+                print "Thread: Peek if there is command in queue"
+                command = robot_command_queue.get_nowait()
+            else:
+                print "Thread: Wait for command from queue"
+                command = robot_command_queue.get()
+            print "Thread: Got command:\n\t- left motor: " + str(command[0]) + "\n\t- right motor: " + str(command[1])
+            if command[0] is not None:
+                motor_run_direct(left_motor, command[0])
+
+            if command[1] is not None:
+                motor_run_direct(left_motor, command[1])
+
+            ticks_left = 4
+            motors_running = True
+            robot_command_queue.task_done()
+        except Empty:
+            print "Thread: Nothing to do.."
+            if ticks_left <= 0:
+                print "Thread: Out of ticks, stop the thing"
+                motor_stop(left_motor)
+                motor_stop(right_motor)
+                motors_running = False
+            else:
+                ticks_left -= 1
+                print "Thread: ticks: " + str(ticks_left)
+            pass
+
+
+thread = threading.Thread(target=the_thread)
+print "Starting the thread"
+thread.start()
 
 
 @app.route("/")
@@ -23,13 +96,21 @@ def hello():
     - /backward_left
     - /backward_right
     - /stop
-  Decides the direction to run based on direction from origo to x,y location, runs 2 seconds towards that direction
+  Decides the direction to run based on direction from 0,0 to x,y location, runs 2 seconds towards that direction
     - /drive?x=[x]&y=[y]
+  To command drive motors individually use
+    - /motors/left_motor?speed=50
+    - /motors/right_motor?speed=75
   Open and close the Claw
     - /grab
-    - /release"""
+    - /release
+"""
 
     return Response(message, mimetype='text/plain')
+
+
+def drive_motors_run_direct(left_motor_speed, right_motor_speed):
+    robot_command_queue.put_nowait((left_motor_speed, right_motor_speed))
 
 
 @app.route("/forward")
@@ -48,13 +129,8 @@ def backward():
 
 @app.route("/stop")
 def stop():
-    global rightMotor
-    global leftMotor
-    print "Stop"
-    rightMotor = get_large_motor('outC')
-    leftMotor = get_large_motor('outB')
-    rightMotor.stop()
-    leftMotor.stop()
+    motor_stop(left_motor)
+    motor_stop(right_motor)
     return "..stopping"
 
 
@@ -125,36 +201,45 @@ def drive():
     else:
         stop()
 
-    wait_and_stop_drive_motors(2)
     return "Driving....\n"
 
 
 @app.route("/grab")
 def grab():
-    global grabMotor
-    grabMotor = get_large_motor('outA')
-    grabMotor.position = 0
-    motor_run_direct(grabMotor, 50)
-    wait_and_stop_motor(grabMotor, 2)
-    return "Grab....\n"
+    motor_run_direct(grab_motor, 100)
+    time.sleep(1)
+    motor_stop(grab_motor)
+    return return_no_content()
 
 
 @app.route("/release")
 def release():
-    global grabMotor
-    grabMotor = get_large_motor('outA')
-    motor_run_direct(grabMotor, -50)
-    wait_and_stop_motor(grabMotor, 2)
-    return "Release...\n"
+    motor_run_direct(grab_motor, -100)
+    time.sleep(1)
+    motor_stop(grab_motor)
+    return return_no_content()
 
 
-def drive_motors_run_direct(left_motor_speed, right_motor_speed):
-    global rightMotor
-    global leftMotor
-    rightMotor = get_large_motor('outC')
-    leftMotor = get_large_motor('outB')
-    motor_run_direct(rightMotor, right_motor_speed)
-    motor_run_direct(leftMotor, left_motor_speed)
+def motor_stop(motor):
+    motor.stop()
+
+
+def return_no_content():
+    return Response(None, 204)
+
+
+@app.route("/motors/right_motor")
+def set_right_motor_speed():
+    motor_speed = request.args.get('speed')
+    drive_motors_run_direct(None, motor_speed)
+    return return_no_content()
+
+
+@app.route("/motors/left_motor")
+def set_left_motor_speed():
+    motor_speed = request.args.get('speed')
+    drive_motors_run_direct(motor_speed, None)
+    return Response(None, 204)
 
 
 def motor_run_direct(motor, motor_speed):
@@ -167,55 +252,6 @@ def motor_run_direct(motor, motor_speed):
     motor.duty_cycle_sp = motor_speed
     motor.run_direct()
 
-
-def wait_and_stop_drive_motors(seconds_to_wait=2):
-    """
-    Waits given time in another thread and the stops the driving motors
-    :param seconds_to_wait:
-    :return:
-    """
-    global rightMotor
-    global leftMotor
-    rightMotor = get_large_motor('outC')
-    leftMotor = get_large_motor('outB')
-    wait_and_stop_motor(rightMotor, seconds_to_wait)
-    wait_and_stop_motor(leftMotor, seconds_to_wait)
-
-
-def wait_and_stop_motor(motor, seconds_to_wait=2):
-    """
-    Starts a thread which sleeps for a given time and the commands the motor given as parameter to stop
-    :param motor:
-    :param seconds_to_wait:
-    :return:
-    """
-    thread = threading.Thread(target=wait_and_stop_motor_thread, args=(motor, seconds_to_wait,))
-    thread.start()
-
-
-def wait_and_stop_motor_thread(motor, seconds_to_wait):
-    time.sleep(seconds_to_wait)
-    motor.stop()
-
-
-def get_large_motor(motor_address):
-    return ev3.LargeMotor(motor_address)
-    #return FakeMotor(motor_address)
-
-
-class FakeMotor(object):
-    """
-    Class for testing the motor commands without ev3dev environment
-    """
-    def __init__(self, motor_name):
-        self.duty_cycle_sp = 0
-        self.motor_name = motor_name
-
-    def run_direct(self):
-        print "Motor " + self.motor_name + " runnig at speed of " + str(self.duty_cycle_sp)
-
-    def stop(self):
-        print "Motor " + self.motor_name + " stopped"
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
