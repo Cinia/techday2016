@@ -34,12 +34,12 @@ def get_large_motor(motor_address):
 
 right_motor = get_large_motor('outC')
 left_motor = get_large_motor('outB')
-grab_motor = get_large_motor('outA')
+grab_motor = ev3.Motor('outA')
 
 robot_command_queue = Queue()
 
 
-def the_thread():
+def command_drive_motors_thread():
     ticks_left = 0
     motors_running = False
 
@@ -78,7 +78,7 @@ def the_thread():
             pass
 
 
-thread = threading.Thread(target=the_thread)
+thread = threading.Thread(target=command_drive_motors_thread)
 print "Starting the thread"
 thread.start()
 
