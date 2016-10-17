@@ -40,22 +40,32 @@ robot_command_queue = Queue()
 
 
 def command_drive_motors_thread():
+    """
+    Listens for robot_command_queue for motor speed commands and commands motors to move accordingly.
+
+    Motors are stopped after 2-3 seconds (5 ticks) if no further commands are given.
+
+    Command read from Queue is tuple containing left motor speed and right motor speed, for example
+        command = (50, 100)
+        command = (None, 75)
+        etc..
+    :return:
+    """
+
     ticks_left = 0
     motors_running = False
 
     print "Thread: the thread is starting"
     while True:
-        # print "the thread is going to sleep"
         time.sleep(0.5)
-        # print "the thread has awoken"
         try:
             if motors_running:
-                print "Thread: Peek if there is command in queue"
+                # print "Thread: Peek if there is command in queue"
                 command = robot_command_queue.get_nowait()
             else:
-                print "Thread: Wait for command from queue"
+                # print "Thread: Wait for command from queue"
                 command = robot_command_queue.get()
-            print "Thread: Got command:\n\t- left motor: " + str(command[0]) + "\n\t- right motor: " + str(command[1])
+            # print "Thread: Got command:\n\t- left motor: " + str(command[0]) + "\n\t- right motor: " + str(command[1])
             if command[0] is not None:
                 motor_run_direct(left_motor, command[0])
 
@@ -66,15 +76,15 @@ def command_drive_motors_thread():
             motors_running = True
             robot_command_queue.task_done()
         except Empty:
-            print "Thread: Nothing to do.."
+            # print "Thread: Nothing to do.."
             if ticks_left <= 0:
-                print "Thread: Out of ticks, stop the thing"
+                # print "Thread: Out of ticks, stop the thing"
                 motor_stop(left_motor)
                 motor_stop(right_motor)
                 motors_running = False
             else:
                 ticks_left -= 1
-                print "Thread: ticks: " + str(ticks_left)
+                # print "Thread: ticks: " + str(ticks_left)
             pass
 
 
