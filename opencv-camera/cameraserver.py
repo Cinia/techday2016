@@ -70,7 +70,7 @@ class StreamingOutput(picamera.array.PiRGBAnalysis):
             
     def handle_image(self, image):
         """
-        !! Do OpenCV magic here!! 
+        !! Do OpenCV magic here !! 
         
         Code below is an example that just grayscales the image.
         
