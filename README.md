@@ -10,6 +10,11 @@ Run `node sensor-data-subscriber/subscriber.js`
 
 Now there should be a webserver running on port 3000 with the sensor data displayed.
 
+## Starting the OpenCV camera server
+
+Run `python2 opencv-camera/cameraserver.py`
+
+This starts a HTTP server on port 8000, and the camera's video feed processed through OpenCV can be accessed there.
 
 ## TODO:
 
