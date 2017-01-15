@@ -1,0 +1,46 @@
+{
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true
+    },
+    "extends": ["eslint:recommended"],
+    "presets": [
+        "react"
+    ],
+    // -funroll-loops
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "ecmaFeatures": {
+            "classes": true,
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        // git mangles this anyway
+        /*
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],*/
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-console": 0,
+        "no-unused-vars": 1,
+        "valid-jsdoc": [1, {
+            "requireReturn": false
+        }]
+    }
+}

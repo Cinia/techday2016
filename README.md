@@ -16,8 +16,15 @@ Run `python2 opencv-camera/cameraserver.py`
 
 This starts a HTTP server on port 8000, and the camera's video feed processed through OpenCV can be accessed there.
 
+## Building and developing the UI
+
+Get Node.js 4.x or newer. Run `npm install` or just `npm i` in robot-ui directory to fetch dependencies.
+
+Start a hot-reloading development environment with `npm run start`.
+
+You can build a static version suitable for any web server with `npm run build`.
+
 ## TODO:
 
- * Link control REST api to Web UI
  * ev3 sensor data to MQTT broker on RPi
  * OpenCV pipeline integration to Web UI

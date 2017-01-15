@@ -1,0 +1,28 @@
+$brand-primary: #fc421d;
+
+@import './bootstrap.scss';
+
+// Actual robot UI styles
+@import './robot-custom-styles.css';
+
+.control-holder {
+    user-select: none;
+    overflow: hidden;
+}
+
+.control {
+    pointer-events: none;
+}
+
+.telemetry-holder {
+    position: absolute;
+    left: 90px + 15px;
+    top: 15px;
+    width: 200px;
+}
+
+.telemetry {
+    padding: 15px;
+    background: rgba(0,0,0,.5);
+    color: white;
+}

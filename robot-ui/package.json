@@ -1,0 +1,46 @@
+{
+    "name": "robot-ui",
+    "description": "Web UI for the tech day robot project.",
+    "author": {
+        "name": "Tommi Teistelä",
+        "email": "totateis@gmail.com"
+    },
+    "contributors": [
+        { "name" : "Tuomas Talvitie" }
+    ],
+    "license": "MIT",
+    "scripts": {
+        "start": "cross-env NODE_ENV=dev webpack-dev-server --progress --history-api-fallback --inline --config webpack.config.js",
+        "build": "cross-env NODE_ENV=production webpack --progress --config webpack.config.js",
+        "server": "node testserver.js"
+    },
+    "dependencies": {
+        "bootstrap-sass": "~3.3.7",
+        "lodash": "~4.17.4",
+        "promise-polyfill": "~6.0.2",
+        "react": "~15.4.2",
+        "react-dom": "~15.4.2",
+        "socket.io-client": "~1.7.2"
+    },
+    "devDependencies": {
+        "babel-core": "~6.21.0",
+        "babel-eslint": "~7.1.1",
+        "babel-loader": "~6.2.10",
+        "babel-plugin-transform-class-properties": "~6.19.0",
+        "babel-preset-es2015": "~6.18.0",
+        "babel-preset-react": "~6.16.0",
+        "cross-env": "~3.1.4",
+        "css-loader": "~0.26.1",
+        "eslint": "~3.13.1",
+        "eslint-plugin-react": "~6.9.0",
+        "file-loader": "~0.9.0",
+        "html-webpack-plugin": "~2.26.0",
+        "node-sass": "~4.2.0",
+        "raw-loader": "~0.5.1",
+        "sass-loader": "~4.1.1",
+        "style-loader": "~0.13.1",
+        "url-loader": "~0.5.7",
+        "webpack": "2.2.0-rc.3",
+        "webpack-dev-server": "2.2.0-rc.0"
+    }
+}
